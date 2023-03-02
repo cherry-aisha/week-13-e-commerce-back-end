@@ -36,25 +36,18 @@ router.post('/', (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
+router.put('/:id', async (req, res) => {
   // update a category by its `id` value
-Category.update(
-  {
-    id: req.body.id,
-    category_name: req.body.category_name,
-  },
-  {
-  where: {
-  id: req.body.id,
-  },
-})
-
-.then ((updatedCategory) => {
-  res.json(updatedCategory);
-})
-.catch (err => {
-  res.status(500).json(err);
-})
+  try {
+    const categoryData = await Category.update(req.body, {
+      where: {
+        id: req.params.id,
+      },
+    })
+    res.status(200).json(categoryData)
+ } catch (err) {
+    res.status(500).json(err)
+ }
 });
 
 router.delete('/:id', (req, res) => {
